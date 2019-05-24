@@ -111,3 +111,33 @@ html , body {
 #thumbB {
     left: 20%;
 }
+
+#gifBox {
+    height: 70%;
+    text-align: center;
+    margin: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#gifPic {
+    /*position:fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*top:10%;*/
+    height: 60%;
+    width: 50%;
+}
+
+#optionBox {
+    text-align: center;
+    margin: auto;
+    position: fixed;
+    top: 70%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
