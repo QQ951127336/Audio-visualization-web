@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
 
@@ -8,7 +8,7 @@ db = SQLAlchemy(app)
 
 @app.route('/')
 def home():
-    return '<h1>Hello World!</h1>'
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run()

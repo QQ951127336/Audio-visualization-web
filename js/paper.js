@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
-    // $("#paperBox1").hide();
-    $("#paperBox2").hide();
+    $("#paperBox1").hide();
+    // $("#paperBox2").hide();
     $("#paperBox3").hide();
     $("#paperBox4").hide();
 
