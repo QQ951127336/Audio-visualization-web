@@ -1,14 +1,33 @@
 $(document).ready(function(){
 
-//     $("#paperBox1").hide();
+    $("#paperBox1").hide();
     $("#paperBox2").hide();
-    $("#paperBox3").hide();
-    $("#paperBox4").hide();
-
+    // $("#paperBox3").hide();
+    // $("#paperBox4").hide();
+    var clicked = false;
     //test
-    $("#paper1").click(function(){
+    $("#paper1").click(function() {
         paperBegin();
     });
+
+    $("#optionA").click(function() {
+        vote(0);
+    });
+
+    $("#optionB").click(function() {
+        vote(1);
+    });
+
+    function vote(option) {
+        if(!clicked) {
+            clicked = true;
+            $.post("/vote", {
+                option:option
+            });
+            $("#paperBox3").hide();
+            $("#paperBox4").hide();
+        }
+    }
 
     function paperBegin() {
         paperHalf();

@@ -21,8 +21,8 @@ $(document).ready(function(){
     function vote(option) {
         if(!clicked) {
             clicked = true;
-            $.post("", {
-                vote:option
+            $.post("/vote", {
+                option:option
             });
             $("#paperBox3").hide();
             $("#paperBox4").hide();
