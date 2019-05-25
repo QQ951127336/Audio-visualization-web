@@ -1,3 +1,4 @@
+#! /usr/bin python3
 class Config(object):
     pass
 

@@ -1,5 +1,5 @@
 
-function audioVisual() {
+function audioVisual(callback) {
     var interval = 10;
     var count = 360/interval;
     var wrap = document.getElementById("wrap");
@@ -40,7 +40,9 @@ function audioVisual() {
     var dislikeData = parseInt($("#dislikeData")[0].innerHTML);
     console.log(likeData);
     console.log(dislikeData);
-
+    audio.addEventListener('ended', function () {
+        callback();
+    }, false);
     audio.play();audio2.play();
     (function draw(){
         analyser.getByteFrequencyData(output);
@@ -84,5 +86,6 @@ function audioVisual() {
         }
         requestAnimationFrame(draw);
     })();
+
 }
 

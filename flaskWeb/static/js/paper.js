@@ -27,8 +27,18 @@ $(document).ready(function(){
             });
             $("#paperBox4").hide();
             $("#paperBox5").show();
-            audioVisual();
+            audioVisual(paperEndHalf);
         }
+    }
+
+    function paperEndHalf() {
+        $("#paperBox3").hide();
+        $("#paperBox4").hide();
+        $("#paperBox5").hide();
+        $("#paperBox2").fadeIn("slow",function() {
+               $("#paperBox2").hide();
+               $("#paperBox1").fadeIn("slow");
+        });
     }
 
     function paperBegin() {
@@ -40,6 +50,7 @@ $(document).ready(function(){
         $("#paperBox2").fadeIn("slow",function() {
             paperFinished();
         });
+        clicked = false;
     }
 
     function paperFinished() {

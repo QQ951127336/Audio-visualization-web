@@ -1,3 +1,4 @@
+#! /usr/bin python3
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 from main import app, db, FeelData
