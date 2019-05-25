@@ -36,6 +36,9 @@ function audioVisual() {
     analyser2.connect(context2.destination);
     var output2 = new Uint8Array(count);
 
+    var likeData = parseInt($("#likeData")[0].innerHTML);
+    var disLikeData = parseInt($("#dislikeData")[0].innerHTML);
+
     audio.play();audio2.play();
     (function draw(){
         analyser.getByteFrequencyData(output);
