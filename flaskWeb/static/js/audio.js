@@ -37,62 +37,51 @@ function audioVisual() {
     var output2 = new Uint8Array(count);
 
     var likeData = parseInt($("#likeData")[0].innerHTML);
-    var disLikeData = parseInt($("#dislikeData")[0].innerHTML);
+    var dislikeData = parseInt($("#dislikeData")[0].innerHTML);
+    console.log(likeData);
+    console.log(dislikeData);
 
     audio.play();audio2.play();
     (function draw(){
         analyser.getByteFrequencyData(output);
-        ctx.clearRect(0, 0, wrap.width, wrap.height);
-        ctx.strokeStyle="#5780ff";
-        ctx.beginPath();
-
-        for(var i = 0; i < count; i++){
-            nodes[i] = new Array();
-            var delX = output[i]/waveTime;
-            var delY = output[i]/waveTime;
-            nodes[i][0] = Math.cos(i*interval/180 * Math.PI)*(R - delX) + center[0];
-            nodes[i][1] = Math.sin(i*interval/180 * Math.PI)*(R - delY) + center[1];
-        }
-        for(var i = 0; i < count; i++){
-            if(i == 0) {
-                ctx.moveTo(nodes[i][0], nodes[i][1]);
-            } else {
-                ctx.quadraticCurveTo(nodes[i%count][0], nodes[i%count][1], (nodes[(i+1)%count][0] + nodes[i%count][0])/2, (nodes[(i+1)%count][1]+nodes[i%count][1])/2);
-            }
-
-        }
-
-        ctx.quadraticCurveTo(nodes[0][0], nodes[0][1], (nodes[1][0]+nodes[0][0])/2 , (nodes[1][1]+nodes[0][1])/2);
-        ctx.closePath();
-        ctx.fillStyle="#65b0ff";
-        ctx.fill();
-        ctx.stroke();
-
         analyser2.getByteFrequencyData(output2);
-        ctx.strokeStyle="#ff3a5c";
-        ctx.beginPath();
-
-        for(var i = 0; i < count; i++){
-            var delX = output2[i]/waveTime;
-            var delY = output2[i]/waveTime;
-            nodes[i][0] = Math.cos(i*interval/180 * Math.PI)*(R - delX) + center[0];
-            nodes[i][1] = Math.sin(i*interval/180 * Math.PI)*(R - delY) + center[1];
+        ctx.clearRect(0, 0, wrap.width, wrap.height);
+        var data = new Array();
+        if(likeData >= dislikeData) {
+            data[0] = {output:output, lineColor:"#5780ff", fillColor:"#65b0ff"};
+            data[1] = {output:output2, lineColor:"#ff3a5c", fillColor:"#ff78b3"};
+        } else{
+            data[0] = {output:output2, lineColor:"#ff3a5c", fillColor:"#ff78b3"};
+            data[1] = {output:output, lineColor:"#5780ff", fillColor:"#65b0ff"};
         }
-        for(var i = 0; i < count; i++){
-            if(i == 0) {
-                ctx.moveTo(nodes[i][0], nodes[i][1]);
-            } else {
-                ctx.quadraticCurveTo(nodes[i%count][0], nodes[i%count][1], (nodes[(i+1)%count][0] + nodes[i%count][0])/2, (nodes[(i+1)%count][1]+nodes[i%count][1])/2);
+        ctx.clearRect(0, 0, wrap.width, wrap.height);
+        for(var lineIndex =0; lineIndex < 2; lineIndex++){
+            ctx.strokeStyle=data[lineIndex].lineColor;
+            ctx.beginPath();
+
+            for(var i = 0; i < count; i++){
+                nodes[i] = new Array();
+                var delX = data[lineIndex].output[i]/waveTime;
+                var delY = data[lineIndex].output[i]/waveTime;
+                nodes[i][0] = Math.cos(i*interval/180 * Math.PI)*(R - delX) + center[0];
+                nodes[i][1] = Math.sin(i*interval/180 * Math.PI)*(R - delY) + center[1];
+            }
+            for(var i = 0; i < count; i++){
+                if(i == 0) {
+                    ctx.moveTo(nodes[i][0], nodes[i][1]);
+                } else {
+                    ctx.quadraticCurveTo(nodes[i%count][0], nodes[i%count][1], (nodes[(i+1)%count][0] + nodes[i%count][0])/2, (nodes[(i+1)%count][1]+nodes[i%count][1])/2);
+                }
+
             }
 
+            ctx.quadraticCurveTo(nodes[0][0], nodes[0][1], (nodes[1][0]+nodes[0][0])/2 , (nodes[1][1]+nodes[0][1])/2);
+            ctx.closePath();
+            ctx.fillStyle=data[lineIndex].fillColor;
+            if(lineIndex ==0)
+                ctx.fill();
+            ctx.stroke();
         }
-
-        ctx.quadraticCurveTo(nodes[0][0], nodes[0][1], (nodes[1][0]+nodes[0][0])/2 , (nodes[1][1]+nodes[0][1])/2);
-        ctx.closePath();
-        // ctx.fillStyle="#ff78b3";
-        // ctx.fill();
-        ctx.stroke();
-
         requestAnimationFrame(draw);
     })();
 }
