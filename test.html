@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="button" onclick="audio2.play()" value="播放" />
+<input type="button" onclick="audio.pause();audio2.pause()" value="暂停" />
+<canvas id="wrap" height="800" width="800"></canvas>
+<script>
+    var wrap = document.getElementById("wrap");
+    var cxt = wrap.getContext("2d");
+    //获取API
+    var AudioContext = AudioContext || webkitAudioContext;
+    var context = new AudioContext;
+    //加载媒体
+    var audio = new Audio("static/piano.mp3");
+    //创建节点
+    var source = context.createMediaElementSource(audio);
+    var analyser = context.createAnalyser();
+    //连接：source → analyser → destination
+    source.connect(analyser);
+    analyser.connect(context.destination);
+    //创建数据
+    var output = new Uint8Array(180);
+
+
+    var AudioContext2 = AudioContext || webkitAudioContext;
+    var context2 = new AudioContext;
+    //加载媒体
+    var audio2 = new Audio("static/guitar.mp3");
+    //创建节点
+    var source2 = context2.createMediaElementSource(audio2);
+    var analyser2 = context2.createAnalyser();
+    //连接：source → analyser → destination
+    source2.connect(analyser2);
+    analyser2.connect(context2.destination);
+    //创建数据
+    var output2 = new Uint8Array(90);
+
+
+
+
+    var du = 2;//角度
+    var potInt = { x: 300, y: 300 };//起始坐标
+    var R = 200;//半径
+    var W = 2;//宽
+    var step = 0;
+    var intervalTime = 2;
+    var interval = intervalTime;
+    (function drawSpectrum() {
+        analyser.getByteFrequencyData(output);//获取频域数据
+        cxt.clearRect(0, 0, wrap.width, wrap.height);
+        //画线条
+        cxt.beginPath();
+        cxt.strokeStyle="#2356ff";
+        cxt.lineJoin="round";
+        cxt.lineCap="round";
+        var i = step%180 ;
+        cxt.moveTo(( Math.sin((i * du) / 180 * Math.PI) * R + potInt.y),-Math.cos((i * du) / 180 * Math.PI) * R + potInt.x);
+        for (var index = 1; index < 180; index++) {
+            var del = 0;
+            var saveI = i;
+            i = (i + index)%180;
+            if(index > 90)
+                del = -90;
+            var value = output[index+del] /7;//<===获取数据
+
+            cxt.lineWidth = W;
+            Rv = (R -value);
+            cxt.lineTo( ( Math.sin((i * du) / 180 * Math.PI) * Rv + potInt.y),-Math.cos((i * du) / 180 * Math.PI) * Rv + potInt.x);
+            i = saveI;
+        }
+        cxt.closePath();
+        cxt.stroke();
+
+        analyser2.getByteFrequencyData(output2);
+        var nodes = new Array()
+        for(var index = 0; index < 180; index++) {
+            nodes[index] = new Array();
+            nodes[index][0] = Math.sin((index * du) / 180 * Math.PI) * R + potInt.y;
+            nodes[index][1] = -Math.cos((i * du) / 180 * Math.PI) * R + potInt.x;
+        }
+
+        cxt.beginPath();
+        cxt.strokeStyle="#ff5091";
+        cxt.lineJoin="round";
+        cxt.lineCap="round";
+        i = step%180 ;
+        cxt.moveTo(( Math.sin((i * du) / 180 * Math.PI) * R + potInt.y),-Math.cos((i * du) / 180 * Math.PI) * R + potInt.x);
+        for (var index = 1; index < 180; index++) {
+            var del = 0;
+            var saveI = i;
+            i = (i + index)%180;
+            if(index > 90)
+                del = -90;
+            var value = output2[index+del] /7;//<===获取数据
+
+            cxt.lineWidth = W;
+            Rv = (R -value);
+            cxt.lineTo( ( Math.sin((i * du) / 180 * Math.PI) * Rv + potInt.y),-Math.cos((i * du) / 180 * Math.PI) * Rv + potInt.x);
+            i = saveI;
+        }
+        cxt.closePath();
+        cxt.stroke();
+        // step = (step+1)%180;
+
+
+
+
+
+        // cxt.fill();
+        // //画一个空心小圆，将线条覆盖
+        // cxt.beginPath();
+        // cxt.lineWidth = 1;
+        // cxt.arc(300, 300, 200, 0, 2 * Math.PI, false);
+        // cxt.stroke();
+        // cxt.closePath();
+        // //请求下一帧
+        requestAnimationFrame(drawSpectrum);
+    })();
+</script>
+
+</body>
+</html>

@@ -1,9 +1,10 @@
 $(document).ready(function(){
 
-    $("#paperBox1").hide();
+    // $("#paperBox1").hide();
     $("#paperBox2").hide();
-    // $("#paperBox3").hide();
-    // $("#paperBox4").hide();
+    $("#paperBox3").hide();
+    $("#paperBox4").hide();
+    $("#paperBox5").hide();
     var clicked = false;
     //test
     $("#paper1").click(function() {
@@ -21,11 +22,12 @@ $(document).ready(function(){
     function vote(option) {
         if(!clicked) {
             clicked = true;
-            $.post("/vote", {
-                option:option
-            });
-            $("#paperBox3").hide();
+            // $.post("/vote", {
+            //     option:option
+            // });
             $("#paperBox4").hide();
+            $("#paperBox5").show();
+            audioVisual();
         }
     }
 
@@ -48,6 +50,6 @@ $(document).ready(function(){
     }
 
     function buttonShow() {
-        $("#paperBox4").fadeIn();
+        $("#paperBox4").fadeIn("slow");
     }
 });
