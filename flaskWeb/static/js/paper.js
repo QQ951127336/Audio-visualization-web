@@ -7,9 +7,12 @@ $(document).ready(function(){
     hide($("#paperBox5"));
     var clicked = false;
     var intervalTime = 1000;
-    var DEFAULT_FLICKER_TIMES = 10;
+    var DEFAULT_FLICKER_TIMES = 6;
     var textFlickerTimes = DEFAULT_FLICKER_TIMES;
     var FLICKER_INTERVAL = 300;
+    var SHAKE_TIME = 5;
+    var SHAKE_INTERVAL = 300;
+    var SHAKE_ANGLE = 10;
     //test
     $("#paper1").click(function() {
         textFlicker($("#paper1_text"));
@@ -23,6 +26,23 @@ $(document).ready(function(){
     $("#optionB").click(function() {
         vote(1);
     });
+
+    function shake(element, times, interval, angle,callback) {
+        if(times <= 0 || element == null) {
+            if(callback != null)
+                callback();
+        }
+        else {
+            if(times%2==0)
+                element[0].style.transform = 'rotate('+angle+'deg)';
+            else
+                element[0].style.transform = 'rotate(-'+angle+'deg)';
+            if(times-1 == 0)
+                callback();
+            else
+                setTimeout(function() {shake(element, times-1, interval, angle, callback);}, interval);
+        }
+    }
 
     function textFlicker(element) {
         if(textFlickerTimes >0 ){
@@ -43,18 +63,21 @@ $(document).ready(function(){
             $.post("/vote", {
                 option:option
             });
+
             hide($("#paperBox4"));
             show($("#paperBox5"));
             audioVisual(paperEndHalf);
         }
     }
 
+    function thumb
+
     function paperEndHalf() {
         hide($("#paperBox3"));
         hide($("#paperBox4"));
         hide($("#paperBox5"));
         show($("#paperBox2"),function() {
-            setTimeout(paperEnd, intervalTime);
+            shake($("#paper2"), SHAKE_TIME, SHAKE_INTERVAL, SHAKE_ANGLE, paperEnd);
         });
     }
 
@@ -70,8 +93,11 @@ $(document).ready(function(){
     function paperHalf() {
         hide($("#paperBox1"));
         show($("#paperBox2"), function() {
-            setTimeout(paperFinished, intervalTime);
+            shake($("#paper2"), SHAKE_TIME, SHAKE_INTERVAL, SHAKE_ANGLE, paperFinished);
         });
+
+
+
         clicked = false;
         textFlickerTimes = DEFAULT_FLICKER_TIMES;
     }
@@ -79,7 +105,7 @@ $(document).ready(function(){
     function paperFinished() {
         hide($("#paperBox2"));
         show($("#paperBox3"), function () {
-            setTimeout(buttonShow, intervalTime);
+            setTimeout(buttonShow, intervalTime*1.5);
         });
     }
 
