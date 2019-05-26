@@ -1,11 +1,12 @@
 $(document).ready(function(){
 
-//    $("#paperBox1").hide();
-    $("#paperBox2").hide();
-     $("#paperBox3").hide();
-     $("#paperBox4").hide();
-     $("#paperBox5").hide();
+//    hide($("#paperBox1"));
+    hide($("#paperBox2"));
+    hide($("#paperBox3"));
+    hide($("#paperBox4"));
+    hide($("#paperBox5"));
     var clicked = false;
+    var intervalTime = 1000;
     //test
     $("#paper1").click(function() {
         paperBegin();
@@ -25,42 +26,64 @@ $(document).ready(function(){
             $.post("/vote", {
                 option:option
             });
-            $("#paperBox4").hide();
-            $("#paperBox5").show();
+            hide($("#paperBox4"));
+            show($("#paperBox5"));
             audioVisual(paperEndHalf);
         }
     }
 
     function paperEndHalf() {
-        $("#paperBox3").hide();
-        $("#paperBox4").hide();
-        $("#paperBox5").hide();
-        $("#paperBox2").fadeIn("slow",function() {
-               $("#paperBox2").hide();
-               $("#paperBox1").fadeIn("slow");
+        hide($("#paperBox3"));
+        hide($("#paperBox4"));
+        hide($("#paperBox5"));
+        show($("#paperBox2"),function() {
+            setTimeout(paperEnd, intervalTime);
         });
     }
 
+    function paperEnd() {
+         hide($("#paperBox2"));
+         show($("#paperBox1"));
+    }
+
     function paperBegin() {
-        paperHalf();
+       setTimeout(paperHalf, intervalTime);
     }
 
     function paperHalf() {
-        $("#paperBox1").hide();
-        $("#paperBox2").fadeIn("slow",function() {
-            paperFinished();
+        hide($("#paperBox1"));
+        show($("#paperBox2"), function() {
+            setTimeout(paperFinished, intervalTime);
         });
         clicked = false;
     }
 
     function paperFinished() {
-        $("#paperBox2").hide();
-        $("#paperBox3").fadeIn("slow",function () {
-            buttonShow();
+        hide($("#paperBox2"));
+        show($("#paperBox3"), function () {
+            setTimeout(buttonShow, intervalTime);
         });
     }
 
     function buttonShow() {
-        $("#paperBox4").fadeIn();
+        show($("#paperBox4"));
+    }
+
+    function show(element, callback) {
+        element = element[0];
+        if(element == null)
+            return none;
+        element.style.display = "inline";
+        if(callback != null)
+            callback();
+    }
+
+    function hide(element, callback) {
+        element = element[0];
+        if(element == null)
+            return none;
+        element.style.display = "none";
+        if(callback != null)
+            callback();
     }
 });

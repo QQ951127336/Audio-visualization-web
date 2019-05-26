@@ -1,5 +1,5 @@
 
-function audioVisual(callback) {
+function audioVisual(intervalTime, callback) {
     var interval = 10;
     var count = 360/interval;
     var wrap = document.getElementById("wrap");
@@ -41,7 +41,7 @@ function audioVisual(callback) {
     console.log(likeData);
     console.log(dislikeData);
     audio.addEventListener('ended', function () {
-        callback();
+        setTimeout(intervalTime, callback);
     }, false);
     audio.play();audio2.play();
     (function draw(){
