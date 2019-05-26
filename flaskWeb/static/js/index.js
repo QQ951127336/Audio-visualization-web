@@ -1,9 +1,9 @@
 $(document).ready(function(){
 
-//    hide($("#paperBox1"));
+   hide($("#paperBox1"));
     hide($("#paperBox2"));
-    hide($("#paperBox3"));
-    hide($("#paperBox4"));
+    // hide($("#paperBox3"));
+    // hide($("#paperBox4"));
     hide($("#paperBox5"));
     var clicked = false;
     var intervalTime = 1000;

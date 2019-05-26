@@ -9,8 +9,15 @@ function audioVisual(intervalTime, callback) {
     ctx.lineWidth = 15;
     ctx.globalAlpha = 0.8;
 // ctx.
+
     var R = wrap.height/2 -10;
     var waveTime = 1;
+    if(wrap.width < 600)
+    {
+        R = wrap.height / 2;
+        waveTime = 3;
+    }
+
     var center = [ wrap.width/2,  wrap.height/2];
     var nodes = new Array();
 //创建数据
