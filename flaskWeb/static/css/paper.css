@@ -32,7 +32,7 @@ html , body {
     height:40%;
 }
 
-.paper1_text {
+#paper1_text {
     font-size: 24px;
     font-family: FangSong;
 }

@@ -7,9 +7,13 @@ $(document).ready(function(){
     hide($("#paperBox5"));
     var clicked = false;
     var intervalTime = 1000;
+    var DEFAULT_FLICKER_TIMES = 10;
+    var textFlickerTimes = DEFAULT_FLICKER_TIMES;
+    var FLICKER_INTERVAL = 300;
     //test
     $("#paper1").click(function() {
-        paperBegin();
+        textFlicker($("#paper1_text"));
+
     });
 
     $("#optionA").click(function() {
@@ -19,6 +23,19 @@ $(document).ready(function(){
     $("#optionB").click(function() {
         vote(1);
     });
+
+    function textFlicker(element) {
+        if(textFlickerTimes >0 ){
+            if(textFlickerTimes%2 == 1)
+                element[0].style.opacity = 1;
+            else
+                element[0].style.opacity = 0.3;
+            textFlickerTimes--;
+            setTimeout(function(){ textFlicker(element);}, FLICKER_INTERVAL);
+        }else{
+             paperBegin();
+        }
+    }
 
     function vote(option) {
         if(!clicked) {
@@ -47,7 +64,7 @@ $(document).ready(function(){
     }
 
     function paperBegin() {
-       setTimeout(paperHalf, intervalTime);
+        paperHalf();
     }
 
     function paperHalf() {
@@ -56,6 +73,7 @@ $(document).ready(function(){
             setTimeout(paperFinished, intervalTime);
         });
         clicked = false;
+        textFlickerTimes = DEFAULT_FLICKER_TIMES;
     }
 
     function paperFinished() {
