@@ -63,14 +63,28 @@ $(document).ready(function(){
             $.post("/vote", {
                 option:option
             });
-
-            hide($("#paperBox4"));
-            show($("#paperBox5"));
-            audioVisual(paperEndHalf);
+            thumb(option, function() {
+                setTimeout(function(){
+                    hide($("#paperBox4"));
+                    show($("#paperBox5"));
+                    audioVisual(paperEndHalf);
+                },intervalTime);
+            });
         }
     }
 
-    function thumb
+    function thumb(option, callback) {
+        var thumbs = new Array();
+        thumbs[0] = $("#thumbA");
+        thumbs[1] = $("#thumbB");
+        thumbs[option][0].style.transform = "rotate(0deg) scale(1)";
+        thumbs[option][0].style.transform = "rotate(0deg) scale(1)";
+        if(option == 0 || option == 1) {
+            thumbs[option][0].style.transform = "rotate(-15deg) scale(1.5)";
+            if(callback != null)
+                callback();
+        }
+    }
 
     function paperEndHalf() {
         hide($("#paperBox3"));
