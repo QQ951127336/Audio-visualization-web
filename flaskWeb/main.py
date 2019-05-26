@@ -15,6 +15,15 @@ def home():
                            dislike=tmpData.dislike
                            )
 
+@app.route('/mobile')
+def mobileHome():
+    tmpData = FeelData.query.first()
+    return render_template('mobileIndex.html',
+                           like=tmpData.like,
+                           dislike=tmpData.dislike
+                           )
+
+
 @app.route('/vote', methods=['GET', 'POST'])
 def vote():
     if request.method == 'POST':
