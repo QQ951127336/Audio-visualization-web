@@ -1,4 +1,6 @@
 #! /usr/bin python3
+import json
+
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
@@ -9,33 +11,29 @@ db = SQLAlchemy(app)
 
 @app.route('/')
 def home():
-    tmpData = FeelData.query.first()
-    return render_template('index.html',
-                           like=tmpData.like,
-                           dislike=tmpData.dislike
-                           )
+    return render_template('index.html')
 
 @app.route('/mobile')
 def mobileHome():
-    tmpData = FeelData.query.first()
-    return render_template('mobileIndex.html',
-                           like=tmpData.like,
-                           dislike=tmpData.dislike
-                           )
+    return render_template('mobileIndex.html')
 
 
 @app.route('/vote', methods=['GET', 'POST'])
 def vote():
+    response = ''
     if request.method == 'POST':
         data = request.form.get('option')
-        tmpData = FeelData.query.first()
+        id = request.form.get('id')
+        tmpData = FeelData.query.filter_by(id=id).first()
         print("data :",data, " tmpData :", tmpData)
         if(data == '0'):
-            FeelData.query.filter_by(id=1).update({'like': tmpData.like+1})
+            FeelData.query.filter_by(id=id).update({'like': tmpData.like+1})
         elif(data == '1'):
-            FeelData.query.filter_by(id=1).update({'dislike': tmpData.dislike + 1})
+            FeelData.query.filter_by(id=id).update({'dislike': tmpData.dislike + 1})
         db.session.commit()
-    return ''
+        data = FeelData.query.filter_by(id=id).first()
+        response = {'like': data.like, 'dislike': data.dislike}
+    return json.dumps(response, ensure_ascii=False)
 
 
 if __name__ == '__main__':

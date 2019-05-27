@@ -117,7 +117,7 @@ html , body {
     text-align: center;
     margin: auto;
     position: fixed;
-    top: 0;
+    top: 10%;
     left: 0;
     right: 0;
     bottom: 0;
@@ -128,8 +128,8 @@ html , body {
     /*left: 0;*/
     /*right: 0;*/
     /*top:10%;*/
-    height: 60%;
-
+    /*height: 60%;*/
+    height: 70%;
     padding-top:1%;
 }
 

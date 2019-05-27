@@ -1,10 +1,4 @@
 $(document).ready(function(){
-
-   hide($("#paperBox1"));
-    hide($("#paperBox2"));
-    // hide($("#paperBox3"));
-    // hide($("#paperBox4"));
-    hide($("#paperBox5"));
     var clicked = false;
     var intervalTime = 1000;
     var DEFAULT_FLICKER_TIMES = 6;
@@ -13,10 +7,25 @@ $(document).ready(function(){
     var SHAKE_TIME = 5;
     var SHAKE_INTERVAL = 300;
     var SHAKE_ANGLE = 10;
+    var gifSrc = ['/static/pic/gif/Makeup.gif', '/static/pic/gif/Marry.gif', '/static/pic/gif/Shopping.gif', '/static/pic/gif/Weak.gif'];
+    var gifSort = [0, 1, 2, 3];
+    var nowGifSort = 0;
+    gifSort.sort(randomSort);
+    var playTime = 0;
+    hide($("#paperBox1"));
+    hide($("#paperBox2"));
+    hide($("#paperBox3"));
+    hide($("#paperBox4"));
+    hide($("#paperBox5"));
+    show($("#paperBox1"), function () {
+        console.log("flick");
+        textFlicker($("#paper1_text"));
+    });
+
+
     //test
     $("#paper1").click(function() {
-        textFlicker($("#paper1_text"));
-
+        paperBegin();
     });
 
     $("#optionA").click(function() {
@@ -26,6 +35,8 @@ $(document).ready(function(){
     $("#optionB").click(function() {
         vote(1);
     });
+
+    function randomSort(a, b) { return Math.random() > 0.5 ? -1 : 1; }
 
     function shake(element, times, interval, angle,callback) {
         if(times <= 0 || element == null) {
@@ -52,23 +63,32 @@ $(document).ready(function(){
                 element[0].style.opacity = 0.3;
             textFlickerTimes--;
             setTimeout(function(){ textFlicker(element);}, FLICKER_INTERVAL);
-        }else{
-             paperBegin();
         }
     }
 
     function vote(option) {
         if(!clicked) {
             clicked = true;
+
             $.post("/vote", {
-                option:option
-            });
-            thumb(option, function() {
-                setTimeout(function(){
-                    hide($("#paperBox4"));
-                    show($("#paperBox5"));
-                    audioVisual(paperEndHalf);
-                },intervalTime);
+                option:option,
+                id:nowGifSort
+            },
+            function (data, status) {
+                var jsonData = JSON.parse(data);
+                var like = 0;
+                var dislike = 1;
+                if(jsonData != null){
+                    like = jsonData.like;
+                    dislike = jsonData.dislike;
+                }
+                thumb(option, function() {
+                    setTimeout(function(){
+                        hide($("#paperBox4"));
+                        show($("#paperBox5"));
+                        audioVisual(nowGifSort, 1000, like, dislike, paperEndHalf);
+                    },intervalTime);
+                });
             });
         }
     }
@@ -77,8 +97,6 @@ $(document).ready(function(){
         var thumbs = new Array();
         thumbs[0] = $("#thumbA");
         thumbs[1] = $("#thumbB");
-        thumbs[option][0].style.transform = "rotate(0deg) scale(1)";
-        thumbs[option][0].style.transform = "rotate(0deg) scale(1)";
         if(option == 0 || option == 1) {
             thumbs[option][0].style.transform = "rotate(-15deg) scale(1.5)";
             if(callback != null)
@@ -97,7 +115,9 @@ $(document).ready(function(){
 
     function paperEnd() {
          hide($("#paperBox2"));
-         show($("#paperBox1"));
+         show($("#paperBox1"), function(){
+            textFlicker($("#paper1_text"));
+         });
     }
 
     function paperBegin() {
@@ -119,12 +139,17 @@ $(document).ready(function(){
     function paperFinished() {
         hide($("#paperBox2"));
         show($("#paperBox3"), function () {
-            setTimeout(buttonShow, intervalTime*1.5);
+            setTimeout(buttonShow, intervalTime);
         });
     }
 
     function buttonShow() {
+        $("#gifPic").attr("src", gifSrc[gifSort[playTime]]);
+        nowGifSort = gifSort[playTime]+1;
+        playTime = (playTime+1)%4;
         show($("#paperBox4"));
+        $("#thumbA")[0].style.transform = "rotate(0deg) scale(1)";
+        $("#thumbB")[0].style.transform = "rotate(0deg) scale(1)";
     }
 
     function show(element, callback) {

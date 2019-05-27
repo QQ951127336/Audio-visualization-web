@@ -1,5 +1,7 @@
 
-function audioVisual(intervalTime, callback) {
+function audioVisual(id ,intervalTime, likeData, dislikeData, callback) {
+    var audioSrc = ['static/audio/makeup/', 'static/audio/marry/', 'static/audio/shopping/', 'static/audio/weak/'];
+    id = id -1;
     var interval = 10;
     var count = 360/interval;
     var wrap = document.getElementById("wrap");
@@ -9,11 +11,14 @@ function audioVisual(intervalTime, callback) {
     ctx.lineWidth = 15;
     ctx.globalAlpha = 0.8;
 // ctx.
-
+    console.log("id :"+id);
+    var likeAudioFinished = false;
+    var dislikeAudioFinished = false;
     var R = wrap.height/2 -10;
     var waveTime = 1;
     if(wrap.width < 600)
     {
+        ctx.lineWidth = 6;
         R = wrap.height / 2;
         waveTime = 3;
     }
@@ -26,7 +31,7 @@ function audioVisual(intervalTime, callback) {
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var context = new AudioContext;
 //加载媒体
-    var audio = new Audio("static/piano.mp3");
+    var audio = new Audio(audioSrc[id]+"like.mp3");
 //创建节点
     var source = context.createMediaElementSource(audio);
     var analyser = context.createAnalyser();
@@ -36,21 +41,33 @@ function audioVisual(intervalTime, callback) {
 
     var AudioContext2 = window.AudioContext || window.webkitAudioContext;
     var context2 = new AudioContext2;
-    var audio2 = new Audio("static/guitar.mp3");
+    var audio2 = new Audio(audioSrc[id]+"dislike.mp3");
     var source2 = context2.createMediaElementSource(audio2);
     var analyser2 = context2.createAnalyser();
     source2.connect(analyser2);
     analyser2.connect(context2.destination);
     var output2 = new Uint8Array(count);
 
-    var likeData = parseInt($("#likeData")[0].innerHTML);
-    var dislikeData = parseInt($("#dislikeData")[0].innerHTML);
-    console.log(likeData);
-    console.log(dislikeData);
+    if(likeData > dislikeData)
+        audio2.volume = audio2.volume/2;
+    else if(likeData < dislikeData)
+        audio.volume = audio.volume/2;
+    console.log('audio :' +audio.volume);
+    console.log('audio2 :' +audio2.volume);
+
+
     audio.addEventListener('ended', function () {
-        setTimeout(intervalTime, callback);
+        likeAudioFinished = true;
+        if(likeAudioFinished && dislikeAudioFinished)
+            setTimeout(callback, intervalTime);
     }, false);
-    audio.play();audio2.play();
+    audio2.addEventListener('ended', function () {
+        dislikeAudioFinished = true;
+        if(likeAudioFinished && dislikeAudioFinished)
+            setTimeout(callback, intervalTime);
+    }, false);
+    setTimeout(function() {audio.play();audio2.play();} , intervalTime);
+
     (function draw(){
         analyser.getByteFrequencyData(output);
         analyser2.getByteFrequencyData(output2);

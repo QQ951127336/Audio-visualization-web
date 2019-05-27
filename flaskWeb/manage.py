@@ -17,9 +17,10 @@ def initData():
     db.create_all()
     data = FeelData.query.first()
     if data == None:
-        data = FeelData()
-        db.session.add(data)
-        db.session.commit()
+        for i in range(4):
+            data = FeelData()
+            db.session.add(data)
+            db.session.commit()
 
 if __name__ == "__main__":
     initData()
