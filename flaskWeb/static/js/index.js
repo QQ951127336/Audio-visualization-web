@@ -7,6 +7,7 @@ $(document).ready(function(){
     var SHAKE_TIME = 5;
     var SHAKE_INTERVAL = 300;
     var SHAKE_ANGLE = 10;
+    var audioSrc = ['static/audio/makeup/', 'static/audio/marry/', 'static/audio/shopping/', 'static/audio/weak/'];
     var gifSrc = ['/static/pic/gif/Makeup.gif', '/static/pic/gif/Marry.gif', '/static/pic/gif/Shopping.gif', '/static/pic/gif/Weak.gif'];
     var gifSort = [0, 1, 2, 3];
     var nowGifSort = 0;
@@ -29,11 +30,29 @@ $(document).ready(function(){
     });
 
     $("#optionA").click(function() {
-        vote(0);
+        var u = navigator.userAgent, app = navigator.appVersion;
+        var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+        if(isIOS){
+            var audioLike = new Audio(audioSrc[nowGifSort-1]+"like.mp3");
+            audioLike.play();
+            var audioDislike = new Audio(audioSrc[nowGifSort-1]+"dislike.mp3");
+            audioDislike.play();
+        }else{
+            vote(0);
+        }
     });
 
     $("#optionB").click(function() {
-        vote(1);
+        var u = navigator.userAgent, app = navigator.appVersion;
+        var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+        if(isIOS){
+            var audioLike = new Audio(audioSrc[nowGifSort-1]+"like.mp3");
+            audioLike.play();
+            var audioDislike = new Audio(audioSrc[nowGifSort-1]+"dislike.mp3");
+            audioDislike.play();
+        }else {
+            vote(1);
+        }
     });
 
     function randomSort(a, b) { return Math.random() > 0.5 ? -1 : 1; }
