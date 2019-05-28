@@ -115,7 +115,7 @@ html , body {
 #gifBox {
     height: 70%;
     text-align: center;
-    margin: auto;
+/*     margin: auto; */
     position: fixed;
     top: 10%;
     left: 0;
@@ -129,7 +129,7 @@ html , body {
     /*right: 0;*/
     /*top:10%;*/
     /*height: 60%;*/
-    height: 70%;
+    height: 80%;
     padding-top:1%;
 }
 

@@ -18,6 +18,7 @@ def mobileHome():
     return render_template('mobileIndex.html')
 
 
+
 @app.route('/vote', methods=['GET', 'POST'])
 def vote():
     response = ''
@@ -33,6 +34,7 @@ def vote():
         db.session.commit()
         data = FeelData.query.filter_by(id=id).first()
         response = {'like': data.like, 'dislike': data.dislike}
+
     return json.dumps(response, ensure_ascii=False)
 
 

@@ -11,6 +11,8 @@ $(document).ready(function(){
     var gifSrc = ['/static/pic/gif/Makeup.gif', '/static/pic/gif/Marry.gif', '/static/pic/gif/Shopping.gif', '/static/pic/gif/Weak.gif'];
     var gifSort = [0, 1, 2, 3];
     var nowGifSort = 0;
+    var iosLike = 0;
+    var iosDislike = 0;
     gifSort.sort(randomSort);
     var playTime = 0;
     hide($("#paperBox1"));
@@ -30,26 +32,32 @@ $(document).ready(function(){
     });
 
     $("#optionA").click(function() {
-        var u = navigator.userAgent, app = navigator.appVersion;
+        var u = navigator.userAgent;
         var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
         if(isIOS){
-            var audioLike = new Audio(audioSrc[nowGifSort-1]+"like.mp3");
-            audioLike.play();
-            var audioDislike = new Audio(audioSrc[nowGifSort-1]+"dislike.mp3");
-            audioDislike.play();
+            hide($("#paperBox4"));
+            show($("#paperBox5"));
+            audioVisual(nowGifSort, 1000, iosLike, iosDislike, paperEndHalf);
+            $.post("/vote", {
+                option:0,
+                id:nowGifSort
+            });
         }else{
             vote(0);
         }
     });
 
     $("#optionB").click(function() {
-        var u = navigator.userAgent, app = navigator.appVersion;
+        var u = navigator.userAgent;
         var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
         if(isIOS){
-            var audioLike = new Audio(audioSrc[nowGifSort-1]+"like.mp3");
-            audioLike.play();
-            var audioDislike = new Audio(audioSrc[nowGifSort-1]+"dislike.mp3");
-            audioDislike.play();
+            hide($("#paperBox4"));
+            show($("#paperBox5"));
+            audioVisual(nowGifSort, 1000, iosLike, iosDislike, paperEndHalf);
+            $.post("/vote", {
+                option:1,
+                id:nowGifSort
+            });
         }else {
             vote(1);
         }
@@ -165,6 +173,17 @@ $(document).ready(function(){
     function buttonShow() {
         $("#gifPic").attr("src", gifSrc[gifSort[playTime]]);
         nowGifSort = gifSort[playTime]+1;
+         $.post("/vote", {
+                option:-1,
+                id:nowGifSort
+            },
+            function (data, status) {
+                var jsonData = JSON.parse(data);
+                if(jsonData != null){
+                    iosLike = jsonData.like;
+                    iosDislike = jsonData.dislike;
+                }
+            });
         playTime = (playTime+1)%4;
         show($("#paperBox4"));
         $("#thumbA")[0].style.transform = "rotate(0deg) scale(1)";

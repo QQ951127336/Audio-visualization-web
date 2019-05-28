@@ -14,12 +14,12 @@ function audioVisual(id ,intervalTime, likeData, dislikeData, callback) {
     console.log("id :"+id);
     var likeAudioFinished = false;
     var dislikeAudioFinished = false;
-    var R = wrap.height/2 -10;
+    var R = wrap.height/2 -200;
     var waveTime = 1;
     if(wrap.width < 600)
     {
         ctx.lineWidth = 6;
-        R = wrap.height / 2;
+        R = wrap.height / 2 - 20;
         waveTime = 3;
     }
 
